@@ -6,27 +6,45 @@
  * @list: list
  */
 
-void insertion_sort_list(listint_t **list)
+void
+insertion_sort_list(listint_t **list)
 {
-	listint_t *ptr = *list;
-	listint_t *prevNode = NULL;
+	listint_t *node, *prox, *ant;
 
-	while (ptr)
-	{
-		while (ptr->prev && (ptr->prev)->n > ptr->n)
+	if (!list || !*list)
+		return;
+
+	node = *list;
+	
+	while (node)
+	{ 
+		ant = node->prev;
+		prox = node->next;
+		while (ant && (ant->n > node->n))
 		{
-			prevNode = ptr->prev;
+			
+			ant->next = node->next;
+			if (node->next != NULL)
+			{
+				node->next->prev = ant;
+			}
+			
+			node->next = ant;
+			node->prev = ant->prev;
+			ant->prev = node;
 
-			prevNode->next = ptr->next;
-			(prevNode->prev)->next = ptr;
-			ptr->prev = prevNode->prev;
-			(ptr->next)->prev = prevNode;
-			ptr->next = prevNode;
-			prevNode->prev = ptr;
-
-			/** print*/
+			
+			if (node->prev)
+			{
+				node->prev->next = node;
+			}
+			else
+			{
+				*list = node;
+			}
+			ant = node->prev;
 			print_list(*list);
 		}
-		ptr = ptr->next;
+		node = prox;
 	}
 }
